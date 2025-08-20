@@ -1,0 +1,51 @@
+# Unity generated folders
+[Ll]ibrary/
+[Tt]emp/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Oo]bj/
+[Mm]emoryCaptures/
+UserSettings/
+
+# Unity crash reports
+sysinfo.txt
+
+# Visual Studio / Rider
+.vscode/
+.idea/
+*.sln
+*.csproj
+*.unityproj
+*.pidb
+*.user
+*.userprefs
+
+# Cache
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Builds
+*.apk
+*.aab
+*.exe
+*.app
+*.xcodeproj
+*.ipa
+
+# Packages
+*.unitypackage
+
+# Ignore logs
+*.log
+
+# Crashlytics
+crashlytics-build.properties

@@ -1,0 +1,24 @@
+# Автономализация line endings
+* text=auto
+
+# Код C# и Unity .meta файлы всегда LF
+*.cs text eol=lf
+*.meta text eol=lf
+
+# Unity YAML (сцены, префабы, анимации) тоже LF
+*.unity text eol=lf
+*.prefab text eol=lf
+*.anim text eol=lf
+*.controller text eol=lf
+*.mat text eol=lf
+
+# Конфиги
+*.json text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+
+# Shell скрипты (если появятся)
+*.sh text eol=lf
+
+# Batch (Windows) остаются CRLF
+*.bat text eol=crlf

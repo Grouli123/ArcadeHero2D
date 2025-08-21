@@ -1,6 +1,6 @@
-﻿// ArcProjectile.cs
-using System.Collections;
+﻿using System.Collections;
 using ArcadeHero2D.Domain.Contracts;
+using ArcadeHero2D.Gameplay.Enemy;
 using UnityEngine;
 
 namespace ArcadeHero2D.Gameplay.Projectiles
@@ -8,11 +8,13 @@ namespace ArcadeHero2D.Gameplay.Projectiles
     [RequireComponent(typeof(Collider2D))]
     public sealed class ArcProjectile : ProjectileBase
     {
-        [SerializeField] float flightTime = 0.4f;
-        [SerializeField] AnimationCurve heightCurve = AnimationCurve.EaseInOut(0, 0, 1, 0);
-        [SerializeField] LayerMask enemyMask;
+        public static System.Action<EnemyController, int> OnHeroHitEnemy;
 
-        Vector2 _start, _end;
+        [SerializeField] private float flightTime = 0.4f;
+        [SerializeField] private AnimationCurve heightCurve = AnimationCurve.EaseInOut(0, 0, 1, 0);
+        [SerializeField] private LayerMask enemyMask;
+
+        private Vector2 _start, _end;
 
         public override void Launch(Vector2 origin, Vector2 target, int damage)
         {
@@ -21,7 +23,7 @@ namespace ArcadeHero2D.Gameplay.Projectiles
             StartCoroutine(Fly());
         }
 
-        IEnumerator Fly()
+        private IEnumerator Fly()
         {
             float t = 0f;
             while (t < flightTime)
@@ -36,10 +38,16 @@ namespace ArcadeHero2D.Gameplay.Projectiles
             Destroy(gameObject);
         }
 
-        void OnTriggerEnter2D(Collider2D other)
+        private void OnTriggerEnter2D(Collider2D other)
         {
             if (((1 << other.gameObject.layer) & enemyMask.value) == 0) return;
-            if (other.TryGetComponent<IDamageable>(out var d)) d.TakeDamage(_damage);
+
+            if (other.TryGetComponent<IDamageable>(out var d))
+                d.TakeDamage(_damage);
+
+            if (other.TryGetComponent<EnemyController>(out var enemy))
+                OnHeroHitEnemy?.Invoke(enemy, _damage);
+
             Destroy(gameObject);
         }
     }

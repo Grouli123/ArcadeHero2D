@@ -9,17 +9,19 @@ namespace ArcadeHero2D.UI.Cards
 {
     public sealed class CardView : MonoBehaviour
     {
-        [SerializeField] Image icon;
-        [SerializeField] TMP_Text title;
-        [SerializeField] TMP_Text price;
-        UpgradeDefinition _def;
-        IUpgradeService _upgrades;
+        [SerializeField] private Image icon;
+        [SerializeField] private TMP_Text title;
+        [SerializeField] private TMP_Text price;
+        private UpgradeDefinition _def;
+        private IUpgradeService _upgrades;
+        private UI.WaveResultPanel _owner;
 
-        void Awake() => _upgrades = ServiceLocator.Get<IUpgradeService>();
+        private void Awake() => _upgrades = ServiceLocator.Get<IUpgradeService>();
 
-        public void Bind(UpgradeDefinition def)
+        public void Bind(UpgradeDefinition def, UI.WaveResultPanel owner)
         {
             _def = def;
+            _owner = owner;
             if (icon) icon.sprite = def.icon;
             title.text = def.title;
             price.text = def.price.ToString();
@@ -29,9 +31,7 @@ namespace ArcadeHero2D.UI.Cards
         {
             if (_def == null) return;
             if (_upgrades.TryApply(_def))
-            {
-                transform.root.SendMessage("Hide", SendMessageOptions.DontRequireReceiver);
-            }
+                _owner?.NotifyChosen();
         }
     }
 }

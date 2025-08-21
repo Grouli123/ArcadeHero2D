@@ -8,17 +8,17 @@ namespace ArcadeHero2D.Gameplay.Enemy
     [RequireComponent(typeof(EnemyController))]
     public sealed class RewardOnDeath : MonoBehaviour
     {
-        [SerializeField] int reward = 1;
-        ICurrencyService _currency;
-        EnemyController _enemy;
+        [SerializeField] private int reward = 1;
+        private ICupBankService _cup;
+        private EnemyController _enemy;
 
-        void Awake()
+        private void Awake()
         {
-            _currency = ServiceLocator.Get<ICurrencyService>();
+            _cup = ServiceLocator.Get<ICupBankService>();
             _enemy = GetComponent<EnemyController>();
             _enemy.Health.OnDied += OnDead;
         }
 
-        void OnDead() => _currency.Add(reward);
+        private void OnDead() => _cup.AddBuffered(reward);
     }
 }

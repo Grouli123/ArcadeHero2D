@@ -6,11 +6,12 @@ namespace ArcadeHero2D.UI
 {
     public sealed class WaveResultPanel : MonoBehaviour
     {
-        [SerializeField] Cards.CardView[] cardSlots;
-        Canvas _canvas;
-        IUpgradeService _upgrades;
+        [SerializeField] private Cards.CardView[] cardSlots;
+        private Canvas _canvas;
+        private IUpgradeService _upgrades;
+        public System.Action OnUpgradeChosen;
 
-        void Awake()
+        private void Awake()
         {
             _canvas = GetComponent<Canvas>();
             _upgrades = ServiceLocator.Get<IUpgradeService>();
@@ -21,7 +22,7 @@ namespace ArcadeHero2D.UI
         {
             var defs = _upgrades.Roll3();
             for (int i = 0; i < cardSlots.Length; i++)
-                cardSlots[i].Bind(defs[i]);
+                cardSlots[i].Bind(defs[i], this);
             _canvas.enabled = true;
             Time.timeScale = 0f;
         }
@@ -30,6 +31,12 @@ namespace ArcadeHero2D.UI
         {
             _canvas.enabled = false;
             Time.timeScale = 1f;
+        }
+
+        public void NotifyChosen()
+        {
+            Hide();
+            OnUpgradeChosen?.Invoke();
         }
     }
 }

@@ -16,8 +16,9 @@ GameObject:
   - component: {fileID: 4246201570949191077}
   - component: {fileID: 6716723124011225290}
   - component: {fileID: 7143514526711394721}
+  - component: {fileID: 3212791013842464835}
   m_Layer: 6
-  m_Name: Enemy
+  m_Name: EnemyMelee
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -192,6 +193,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 1.2
   stopDistance: 1
+  lockToGroundY: 1
 --- !u!114 &6716723124011225290
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -219,6 +221,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   reward: 1
+--- !u!114 &3212791013842464835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1811540710448087819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f94e995b4a7a4f0ea47c9f3279f9c088, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stepDistance: 0.4
+  meleeRange: 1.05
+  damagePerHit: 2
+  hitCooldown: 0.6
+  minSpacing: 0.8
+  lane: {fileID: 0}
 --- !u!1001 &2449034914883430260
 PrefabInstance:
   m_ObjectHideFlags: 0

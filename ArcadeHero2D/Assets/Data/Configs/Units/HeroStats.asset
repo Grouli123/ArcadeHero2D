@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aabd79e41fe04a5497310a54541e0e70, type: 3}
   m_Name: HeroStats
   m_EditorClassIdentifier: 
-  maxHP: 10
+  maxHP: 100
   attack: 2
   attackRate: 1.2
-  moveSpeed: 1
+  moveSpeed: 1.5

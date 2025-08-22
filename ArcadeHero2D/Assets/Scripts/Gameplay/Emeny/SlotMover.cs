@@ -2,59 +2,84 @@
 
 namespace ArcadeHero2D.Gameplay.Enemy
 {
+    [DisallowMultipleComponent]
+    [RequireComponent(typeof(Rigidbody2D))]
     public sealed class SlotMover : MonoBehaviour
     {
-        [SerializeField] private float approachSpeed = 2.0f;
-        [SerializeField] private float reachEps = 0.02f;
+        [Header("Move")]
+        [SerializeField] private float moveSpeed = 2.2f;
+        [SerializeField] private float stopEpsilon = 0.02f;
+        [SerializeField] private float slowDownDistance = 0.25f;
+
+        [Header("Lane")]
         [SerializeField] private bool lockToLaneY = true;
 
-        public float slotX;
-        private float _laneY;
-        private bool _hasSlot;
+        private Rigidbody2D _rb;
+        private float? _targetX;
+        private float  _laneY;
 
-        public bool HasSlot => _hasSlot;
-        public bool InSlot { get; private set; }
+        public bool InSlot => !_targetX.HasValue;
+        public float? TargetX => _targetX;
 
-        public void SetLaneY(float y) => _laneY = y;
-
-        public void SetSlotX(float x)
+        private void Awake()
         {
-            slotX = x;
-            _hasSlot = true;
-            InSlot = false;
+            _rb = GetComponent<Rigidbody2D>();
+            _rb.bodyType = RigidbodyType2D.Kinematic;
+            _rb.gravityScale = 0f;
+            _rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+            _rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
+            _rb.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionY;
+
+            if (lockToLaneY) _laneY = _rb.position.y;
         }
 
-        public void ForceSnapToSlot()
+        public void SetLaneY(float y)
         {
-            if (!_hasSlot) return;
-            var p = transform.position;
-            p.x = slotX;
-            if (lockToLaneY) p.y = _laneY;
-            transform.position = p;
-            InSlot = true;
+            _laneY = y;
+            if (lockToLaneY)
+            {
+                var p = _rb.position;
+                p.y = y;
+                _rb.position = p; 
+            }
         }
 
-        private void Update()
+        public void SetSlotX(float slotX) => SetTargetX(slotX); 
+        public void SetTargetX(float x)    => _targetX = x;
+        public void ClearTarget()          => _targetX = null;
+
+        private void FixedUpdate()
         {
-            if (!_hasSlot || InSlot) return;
+            if (!_targetX.HasValue) return;
 
-            var p = transform.position;
-            if (lockToLaneY) p.y = _laneY;
-
-            float dx = slotX - p.x;
+            float x   = _rb.position.x;
+            float tx  = _targetX.Value;
+            float dx  = tx - x;
             float adx = Mathf.Abs(dx);
 
-            if (adx <= reachEps)
+            if (adx <= stopEpsilon)
             {
-                p.x = slotX;
-                transform.position = p;
-                InSlot = true;
+                _rb.MovePosition(new Vector2(tx, lockToLaneY ? _laneY : _rb.position.y));
+                _targetX = null;
                 return;
             }
 
-            float dir = Mathf.Sign(dx);
-            p.x += dir * approachSpeed * Time.deltaTime;
-            transform.position = p;
+            float dir   = Mathf.Sign(dx);
+            float speed = moveSpeed;
+
+            if (adx < slowDownDistance)
+            {
+                float t = Mathf.InverseLerp(0f, slowDownDistance, adx);
+                speed = Mathf.Lerp(0.1f, moveSpeed, t);
+            }
+
+            float step = dir * speed * Time.fixedDeltaTime;
+            float newX = x + step;
+
+            if (Mathf.Abs(tx - newX) > adx) newX = tx;
+
+            var p = new Vector2(newX, lockToLaneY ? _laneY : _rb.position.y);
+            _rb.MovePosition(p);
         }
     }
 }

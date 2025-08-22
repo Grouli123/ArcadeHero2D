@@ -1,32 +1,33 @@
-﻿using ArcadeHero2D.Rendering;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace ArcadeHero2D.Gameplay.Hero
 {
+    [RequireComponent(typeof(Rigidbody2D))]
     public sealed class HeroMover : MonoBehaviour
     {
-        [SerializeField] float moveSpeed = 1.5f;
+        [SerializeField] private float moveSpeed = 1.5f;
+        private Rigidbody2D _rb;
         private bool _moving;
-        private UnitAnimationController _anim;
 
-        private void Awake() => _anim = GetComponentInChildren<UnitAnimationController>();
+        public void Resume() => _moving = true;
+        public void Stop()   => _moving = false;
 
-        public void Resume()
+        private void Awake()
         {
-            _moving = true;
-            if (_anim) _anim.SetMoving(true);
+            _rb = GetComponent<Rigidbody2D>();
+            _rb.bodyType = RigidbodyType2D.Kinematic;
+            _rb.gravityScale = 0;
+            _rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+            _rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
+            _rb.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionY;
         }
 
-        public void Stop()
+        private void FixedUpdate()
         {
-            _moving = false;
-            if (_anim) _anim.SetMoving(false);
-        }
-
-        private void Update()
-        {
-            if (_moving)
-                transform.Translate(Vector3.right * moveSpeed * Time.deltaTime, Space.World);
+            if (!_moving) return;
+            var p = _rb.position;
+            p.x += moveSpeed * Time.fixedDeltaTime;
+            _rb.MovePosition(p);
         }
     }
 }

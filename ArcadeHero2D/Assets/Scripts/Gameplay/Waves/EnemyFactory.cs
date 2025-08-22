@@ -14,7 +14,7 @@ namespace ArcadeHero2D.Gameplay.Enemy
             var e = Instantiate(prefab, pos, Quaternion.identity, spawnRoot);
             e.gameObject.name = prefab.name + "_Clone";
             e.gameObject.SetActive(true);
-            Debug.LogWarning($"[Factory] Spawned {e.name} @ {pos}"); // видно даже при фильтре Info
+            Debug.LogWarning($"[Factory] Spawned {e.name} @ {pos}"); 
             return e;
         }
     }

@@ -7,29 +7,29 @@ namespace ArcadeHero2D.Minigame
     [RequireComponent(typeof(Collider2D))]
     public sealed class MultiplierTrigger : MonoBehaviour
     {
-        [SerializeField] int factor = 2;
-        [SerializeField] bool mystery;
-        [SerializeField] TMP_Text label;
+        [SerializeField] private int factor = 2;
+        [SerializeField] private bool mystery;
+        [SerializeField] private TMP_Text label;
 
-        bool _revealed;
-        readonly HashSet<int> _touched = new();
+        private bool _revealed;
+        private readonly HashSet<int> _touched = new();
 
-        void Awake()
+        private void Awake()
         {
             var col = GetComponent<Collider2D>();
-            col.isTrigger = true; // множитель — ТРИГГЕР
+            col.isTrigger = true; 
         }
 
-        void Start()
+        private void Start()
         {
             if (label == null) label = GetComponentInChildren<TMP_Text>(true);
             if (label != null) label.text = mystery ? "???" : $"x{factor}";
         }
 
-        void OnTriggerEnter2D(Collider2D other) => Handle(other);
-        void OnTriggerStay2D  (Collider2D other) => Handle(other);
+        private void OnTriggerEnter2D(Collider2D other) => Handle(other);
+        private void OnTriggerStay2D  (Collider2D other) => Handle(other);
 
-        void Handle(Collider2D other)
+        private void Handle(Collider2D other)
         {
             if (!other.TryGetComponent<Coin>(out var coin)) return;
 

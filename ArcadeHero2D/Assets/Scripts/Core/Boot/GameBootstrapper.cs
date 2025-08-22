@@ -1,5 +1,4 @@
-﻿using ArcadeHero2D.Core.Boot;
-using ArcadeHero2D.Core.Flow;
+﻿using ArcadeHero2D.Core.Flow;
 using ArcadeHero2D.Data.Units;
 using ArcadeHero2D.Domain.Contracts;
 using ArcadeHero2D.Services.Currency;

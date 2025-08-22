@@ -5,20 +5,19 @@ namespace ArcadeHero2D.Gameplay.Enemy
 {
     public sealed class EnemyMover : MonoBehaviour, IMovable
     {
-        [SerializeField] float speed = 1.2f;
-        [SerializeField] float stopDistance = 1.0f;
-        [SerializeField] bool lockToGroundY = true;
+        [SerializeField] private float speed = 1.2f;
+        [SerializeField] private float stopDistance = 1.0f;
+        [SerializeField] private bool lockToGroundY = true;
 
-        Transform _target;
-        float _laneY;
-        bool _stop;
+        private Transform _target;
+        private float _laneY;
+        private bool _stop;
 
         public void SetTarget(Transform t) => _target = t;
 
-        // Задаём «линию» (высоту) движения — вызовем из EnemyController.Init(hero)
         public void SetLaneY(float y) => _laneY = y;
 
-        void Start()
+        private void Start()
         {
             if (lockToGroundY)
             {
@@ -28,11 +27,10 @@ namespace ArcadeHero2D.Gameplay.Enemy
             }
         }
 
-        void Update()
+        private void Update()
         {
             if (_target == null || _stop) return;
 
-            // считаем горизонтальную дистанцию
             float dx = _target.position.x - transform.position.x;
             float absDx = Mathf.Abs(dx);
 
@@ -43,7 +41,6 @@ namespace ArcadeHero2D.Gameplay.Enemy
                 return;
             }
 
-            // двигаемся ТОЛЬКО по X
             float dirX = Mathf.Sign(dx);
             Move(new Vector2(dirX, 0f), speed);
             SnapY();
@@ -54,7 +51,7 @@ namespace ArcadeHero2D.Gameplay.Enemy
 
         public void Stop() => _stop = true;
 
-        void SnapY()
+        private void SnapY()
         {
             if (!lockToGroundY) return;
             var p = transform.position;

@@ -18,7 +18,7 @@ namespace ArcadeHero2D.Core.CameraSys
         public void MoveToTop()    => StartCoroutine(MoveTo(topAnchor.position));
         public void MoveToBottom() => StartCoroutine(MoveTo(bottomAnchor.position));
 
-        IEnumerator MoveTo(Vector3 target)
+        private IEnumerator MoveTo(Vector3 target)
         {
             if (rig == null) rig = transform;
             Vector3 start = rig.position;

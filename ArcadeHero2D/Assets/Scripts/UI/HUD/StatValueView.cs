@@ -9,18 +9,18 @@ namespace ArcadeHero2D.UI.HUD
     {
         public enum StatKind { Attack, AttackSpeed }
 
-        [SerializeField] StatKind kind;
-        [SerializeField] TMP_Text label;
+        [SerializeField] private StatKind kind;
+        [SerializeField] private TMP_Text label;
         IStatsService _stats;
 
-        void Awake()
+        private void Awake()
         {
             _stats = ServiceLocator.Get<IStatsService>();
             _stats.OnChanged += Refresh;
             Refresh();
         }
 
-        void Refresh()
+        private void Refresh()
         {
             label.text = kind == StatKind.Attack
                 ? _stats.Attack.ToString()

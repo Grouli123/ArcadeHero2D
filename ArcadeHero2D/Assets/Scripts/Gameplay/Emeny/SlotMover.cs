@@ -4,13 +4,13 @@ namespace ArcadeHero2D.Gameplay.Enemy
 {
     public sealed class SlotMover : MonoBehaviour
     {
-        [SerializeField] float approachSpeed = 2.0f;
-        [SerializeField] float reachEps = 0.02f;
-        [SerializeField] bool lockToLaneY = true;
+        [SerializeField] private float approachSpeed = 2.0f;
+        [SerializeField] private float reachEps = 0.02f;
+        [SerializeField] private bool lockToLaneY = true;
 
-        float _slotX;
-        float _laneY;
-        bool _hasSlot;
+        public float slotX;
+        private float _laneY;
+        private bool _hasSlot;
 
         public bool HasSlot => _hasSlot;
         public bool InSlot { get; private set; }
@@ -19,7 +19,7 @@ namespace ArcadeHero2D.Gameplay.Enemy
 
         public void SetSlotX(float x)
         {
-            _slotX = x;
+            slotX = x;
             _hasSlot = true;
             InSlot = false;
         }
@@ -28,25 +28,25 @@ namespace ArcadeHero2D.Gameplay.Enemy
         {
             if (!_hasSlot) return;
             var p = transform.position;
-            p.x = _slotX;
+            p.x = slotX;
             if (lockToLaneY) p.y = _laneY;
             transform.position = p;
             InSlot = true;
         }
 
-        void Update()
+        private void Update()
         {
             if (!_hasSlot || InSlot) return;
 
             var p = transform.position;
             if (lockToLaneY) p.y = _laneY;
 
-            float dx = _slotX - p.x;
+            float dx = slotX - p.x;
             float adx = Mathf.Abs(dx);
 
             if (adx <= reachEps)
             {
-                p.x = _slotX;
+                p.x = slotX;
                 transform.position = p;
                 InSlot = true;
                 return;

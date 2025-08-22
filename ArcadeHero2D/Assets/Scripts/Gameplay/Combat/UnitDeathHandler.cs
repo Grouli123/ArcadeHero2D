@@ -11,23 +11,22 @@ namespace ArcadeHero2D.Gameplay.Combat
     public sealed class UnitDeathHandler : MonoBehaviour
     {
         [Header("Disable on death (optional)")]
-        [SerializeField] private MonoBehaviour[] disableOnDeath;   // HeroMover, HeroAttackController, Enemy*Responder, SlotMover и пр.
-        [SerializeField] private Collider2D[]   disableColliders;  // если не задать — найдём автоматически
-        [SerializeField] private Rigidbody2D     rb;               // если есть — заморозим
+        [SerializeField] private MonoBehaviour[] disableOnDeath;   
+        [SerializeField] private Collider2D[]   disableColliders;  
+        [SerializeField] private Rigidbody2D     rb;               
 
         [Header("Despawn")]
-        [SerializeField] private bool destroyOnDeath = true;       // ВКЛ для всех (и герой, и враги)
-        [SerializeField] private float extraLifetime = 0.15f;      // небольшой запас после клипа
+        [SerializeField] private bool destroyOnDeath = true;       
+        [SerializeField] private float extraLifetime = 0.15f;      
 
-        UnitAnimationController _anim;
-        IHealth _health;
-        bool _handled;
+        private UnitAnimationController _anim;
+        private IHealth _health;
+        private bool _handled;
 
-        void Awake()
+        private void Awake()
         {
             _anim = GetComponent<UnitAnimationController>();
 
-            // найдём здоровье через UnitBase на этом/родительском GO
             var unit = GetComponentInParent<UnitBase>();
             _health  = unit ? unit.Health : null;
 
@@ -36,26 +35,25 @@ namespace ArcadeHero2D.Gameplay.Combat
                 disableColliders = GetComponentsInChildren<Collider2D>(true);
         }
 
-        void OnEnable()
+        private void OnEnable()
         {
             if (_health != null) _health.OnDied += OnDied;
         }
 
-        void OnDisable()
+        private void OnDisable()
         {
             if (_health != null) _health.OnDied -= OnDied;
         }
 
-        void OnDied()
+        private void OnDied()
         {
             if (_handled) return;
             _handled = true;
             StartCoroutine(DoDeath());
         }
 
-        IEnumerator DoDeath()
+        private IEnumerator DoDeath()
         {
-            // 1) Глушим логику, коллайдеры, физику
             if (disableOnDeath != null)
                 foreach (var b in disableOnDeath) if (b) b.enabled = false;
 
@@ -70,10 +68,8 @@ namespace ArcadeHero2D.Gameplay.Combat
                 rb.simulated = false;
             }
 
-            // 2) Играем смерть
             float dur = _anim != null ? _anim.PlayDeath() : 0.6f;
 
-            // 3) Ждём конец клипа и небольшой запас, затем удаляем
             yield return new WaitForSeconds(dur + extraLifetime);
 
             if (destroyOnDeath && this != null && gameObject != null)

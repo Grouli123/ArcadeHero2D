@@ -5,15 +5,15 @@ namespace ArcadeHero2D.Gameplay.Enemy
 {
     public sealed class EnemyAttack : MonoBehaviour
     {
-        [SerializeField] int damagePerHit = 2;
-        [SerializeField] float hitInterval = 0.6f;
+        [SerializeField] private int damagePerHit = 2;
+        [SerializeField] private float hitInterval = 0.6f;
 
-        Transform _target;
-        float _cd;
+        private Transform _target;
+        private float _cd;
 
         public void SetTarget(Transform t) => _target = t;
 
-        void Update()
+        private void Update()
         {
             if (_target == null) return;
             if (_cd > 0f) { _cd -= Time.deltaTime; return; }

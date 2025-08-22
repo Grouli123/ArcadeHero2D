@@ -6,9 +6,9 @@ namespace ArcadeHero2D.Services.Upgrades
 {
     public sealed class UpgradeService : IUpgradeService
     {
-        readonly ICurrencyService _currency;
-        readonly IStatsService _stats;
-        readonly UpgradeDefinition[] _pool;
+        private readonly ICurrencyService _currency;
+        private readonly IStatsService _stats;
+        private readonly UpgradeDefinition[] _pool;
 
         public UpgradeService(ICurrencyService currency, IStatsService stats, UpgradeDefinition[] pool)
         {

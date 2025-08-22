@@ -11,7 +11,7 @@ namespace ArcadeHero2D.Gameplay.Hero
         [SerializeField] public HeroTargeting targeting;
         [SerializeField] public HeroAttackController attack;
 
-        IStatsService _stats;
+        private IStatsService _stats;
 
         protected override void Awake()
         {
@@ -21,7 +21,7 @@ namespace ArcadeHero2D.Gameplay.Hero
             _stats.OnChanged += ApplyStatsToHealth;
         }
 
-        void ApplyStatsToHealth()
+        private void ApplyStatsToHealth()
         {
             int delta = _stats.MaxHP - _health.Max;
             if (delta != 0) _health.IncreaseMax(delta, true);

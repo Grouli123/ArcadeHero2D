@@ -1,5 +1,4 @@
 ﻿using ArcadeHero2D.Domain.Base;
-using ArcadeHero2D.Domain.Contracts;
 using UnityEngine;
 
 namespace ArcadeHero2D.Gameplay.Enemy

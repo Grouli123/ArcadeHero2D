@@ -8,8 +8,8 @@ namespace ArcadeHero2D.Minigame
         [field: SerializeField] public Rigidbody2D Body { get; private set; }
 
         [Header("Gameplay")]
-        [SerializeField] int value = 1;
-        [SerializeField] float spawnIgnoreTime = 0.1f;
+        [SerializeField] private int value = 1;
+        [SerializeField] private float spawnIgnoreTime = 0.1f;
 
         public int Value => value;
 
@@ -17,26 +17,26 @@ namespace ArcadeHero2D.Minigame
         public int LastZoneId { get; set; } = -1;
         public bool IsFresh(float guard) => Time.time - BornTime < guard;
 
-        bool _markedForDestroy;
+        private bool _markedForDestroy;
 
-        void Awake()
+        private void Awake()
         {
             if (!Body) Body = GetComponent<Rigidbody2D>();
             var col = GetComponent<Collider2D>();
             col.isTrigger = false;
         }
 
-        void OnEnable()
+        private void OnEnable()
         {
             _markedForDestroy = false;
             BornTime = Time.time;
             LastZoneId = -1;
-            CoinRegistry.Register(this);   // ← добавили
+            CoinRegistry.Register(this);   
         }
 
-        void OnDestroy()
+        private void OnDestroy()
         {
-            CoinRegistry.Unregister(this); // ← добавили
+            CoinRegistry.Unregister(this); 
         }
 
         public void Multiply(int factor, float scatterImpulse = 0.8f, float upwardBias = 0.25f)

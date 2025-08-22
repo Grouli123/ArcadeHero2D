@@ -30,7 +30,6 @@ namespace ArcadeHero2D.Gameplay.Battle
                 var target = ChooseTarget(enemies);
                 if (target == null) yield break;
 
-                // ждём КД героя
                 while (!heroAttack.CanAttack) yield return null;
 
                 bool hit = false;
@@ -46,7 +45,6 @@ namespace ArcadeHero2D.Gameplay.Battle
                 while (!hit && (t -= Time.deltaTime) > 0f) yield return null;
                 ArcProjectile.OnHeroHitEnemy -= OnHit;
 
-                // Ход врагов: каждый делает шаг/выстрел
                 for (int i = 0; i < enemies.Count; i++)
                 {
                     var e = enemies[i];
@@ -56,7 +54,6 @@ namespace ArcadeHero2D.Gameplay.Battle
                         responders[r].OnHeroAttacked();
                 }
 
-                // чистим мёртвых
                 for (int i = enemies.Count - 1; i >= 0; i--)
                     if (enemies[i] == null || !enemies[i].IsAlive)
                         enemies.RemoveAt(i);
@@ -65,7 +62,7 @@ namespace ArcadeHero2D.Gameplay.Battle
             }
         }
 
-        EnemyController ChooseTarget(IList<EnemyController> enemies)
+        private EnemyController ChooseTarget(IList<EnemyController> enemies)
         {
             EnemyController best = null;
             float bestX = float.MaxValue;
@@ -79,7 +76,7 @@ namespace ArcadeHero2D.Gameplay.Battle
             return best;
         }
 
-        bool IsHeroAlive()
+        private bool IsHeroAlive()
         {
             return hero != null && hero.TryGetComponent<IDamageable>(out var d) && d.IsAlive;
         }

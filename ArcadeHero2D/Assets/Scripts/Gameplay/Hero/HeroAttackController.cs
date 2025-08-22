@@ -10,9 +10,9 @@ namespace ArcadeHero2D.Gameplay.Hero
         [SerializeField] private Projectiles.ProjectileBase projectilePrefab;
         [SerializeField] private Transform firePoint;
 
-        IStatsService _stats;
-        UnitAnimationController _anim;
-        float _cd;
+        private IStatsService _stats;
+        private UnitAnimationController _anim;
+        private float _cd;
 
         public bool AttackEnabled { get; set; } = true;
 
@@ -20,13 +20,13 @@ namespace ArcadeHero2D.Gameplay.Hero
         public float AttackRate  => _stats != null ? _stats.AttackSpeed : 1f;
         public bool CanAttack    => _cd <= 0f && AttackEnabled;
 
-        void Awake()
+        private void Awake()
         {
             _stats = ServiceLocator.Get<IStatsService>();
             _anim  = GetComponentInParent<UnitAnimationController>();
         }
 
-        void Update()
+        private void Update()
         {
             if (_cd > 0f) _cd -= Time.deltaTime;
         }

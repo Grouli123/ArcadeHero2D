@@ -10,39 +10,39 @@ namespace ArcadeHero2D.Minigame
     public sealed class CoinMiniGameController : MonoBehaviour
     {
         [Header("Refs")]
-        [SerializeField] GameObject cupRoot;
-        [SerializeField] CupDragController cupDrag;
-        [SerializeField] CupPourController cupPour;
-        [SerializeField] CoinCollector collector;
-        [SerializeField] CameraRigController cameraRig;
+        [SerializeField] private GameObject cupRoot;
+        [SerializeField] private CupDragController cupDrag;
+        [SerializeField] private CupPourController cupPour;
+        [SerializeField] private CoinCollector collector;
+        [SerializeField] private CameraRigController cameraRig;
 
         [Header("Tuning")]
-        [SerializeField] float settleDelay = 0.8f;
-        [SerializeField] float slowCoinsPerSecond = 4f;
-        [SerializeField] bool globalTapStartsPour = false;
+        [SerializeField] private float settleDelay = 0.8f;
+        [SerializeField] private float slowCoinsPerSecond = 4f;
+        [SerializeField] private bool globalTapStartsPour = false;
 
-        ICupBankService  _cup;
-        ICurrencyService _currency;
+        private ICupBankService  _cup;
+        private ICurrencyService _currency;
 
-        int  _expectedCount;
-        bool _cameraDown;
-        bool _pourStarted;
+        private int  _expectedCount;
+        private bool _cameraDown;
+        private bool _pourStarted;
 
         public System.Action OnFinished;
 
-        void Awake()
+        private void Awake()
         {
             _cup      = ServiceLocator.Get<ICupBankService>();
             _currency = ServiceLocator.Get<ICurrencyService>();
             SetCupVisible(false);
         }
-
-        void OnEnable()
+        
+        private void OnEnable()
         {
             if (cupDrag != null) cupDrag.OnUserInteract += HandleUserInteract;
         }
 
-        void OnDisable()
+        private void OnDisable()
         {
             if (cupDrag != null) cupDrag.OnUserInteract -= HandleUserInteract;
         }
@@ -56,7 +56,6 @@ namespace ArcadeHero2D.Minigame
             collector.ResetSum();
             SetCupVisible(false);
 
-            // перед стартом — сбросить реестр живых монет (никаких старых хвостов)
             CoinRegistry.Reset();
 
             _expectedCount = _cup != null ? _cup.TakeAll() : 0;
@@ -65,14 +64,13 @@ namespace ArcadeHero2D.Minigame
             cameraRig.MoveToBottom();
         }
 
-        void OnCamDownComplete()
+        private void OnCamDownComplete()
         {
             cameraRig.OnMoveCompleted -= OnCamDownComplete;
             _cameraDown = true;
 
             if (_expectedCount <= 0)
             {
-                // Монет нет — пустой цикл: просто наверх после «вниз»
                 StartCoroutine(FinishAfterCameraUp(hideCupBeforeMoveUp:false));
                 return;
             }
@@ -80,7 +78,7 @@ namespace ArcadeHero2D.Minigame
             SetCupVisible(true);
         }
 
-        void HandleUserInteract()
+        private void HandleUserInteract()
         {
             if (!_cameraDown || _pourStarted) return;
             _pourStarted = true;
@@ -93,36 +91,30 @@ namespace ArcadeHero2D.Minigame
             }
         }
 
-        void Update()
+        private void Update()
         {
             if (!_cameraDown || _pourStarted || !globalTapStartsPour) return;
             if (Input.GetMouseButtonDown(0) || Input.touchCount > 0)
                 HandleUserInteract();
         }
 
-        IEnumerator WaitForAllCoinsCollected()
+        private IEnumerator WaitForAllCoinsCollected()
         {
-            // ждём, пока монеты досыпятся
             while (cupPour != null && cupPour.Pouring) yield return null;
 
-            // ещё чуть-чуть, чтобы физика успокоилась
             yield return new WaitForSeconds(settleDelay);
 
-            // ключевое ожидание: пока в сцене есть живые монеты — стоим
             while (CoinRegistry.Live > 0)
                 yield return null;
 
-            // все монеты уже упали в стакан и уничтожены — значит collector собрал финальную сумму
             if (_currency != null) _currency.Add(collector.TotalCollected);
 
-            // кадр на обновление UI (верхний бар)
             yield return null;
 
-            // прячем стакан и поднимаем камеру; карточки покажутся только после полного подъёма
             yield return StartCoroutine(FinishAfterCameraUp(hideCupBeforeMoveUp:true));
         }
 
-        IEnumerator FinishAfterCameraUp(bool hideCupBeforeMoveUp)
+        private IEnumerator FinishAfterCameraUp(bool hideCupBeforeMoveUp)
         {
             if (hideCupBeforeMoveUp)
                 SetCupVisible(false);
@@ -143,7 +135,7 @@ namespace ArcadeHero2D.Minigame
             OnFinished?.Invoke();
         }
 
-        void SetCupVisible(bool visible)
+        private void SetCupVisible(bool visible)
         {
             if (cupRoot != null) cupRoot.SetActive(visible);
             if (cupDrag != null) cupDrag.EnableInput(visible);

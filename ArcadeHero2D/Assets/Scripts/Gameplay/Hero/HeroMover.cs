@@ -6,10 +6,10 @@ namespace ArcadeHero2D.Gameplay.Hero
     public sealed class HeroMover : MonoBehaviour
     {
         [SerializeField] float moveSpeed = 1.5f;
-        bool _moving;
-        UnitAnimationController _anim;
+        private bool _moving;
+        private UnitAnimationController _anim;
 
-        void Awake() => _anim = GetComponentInChildren<UnitAnimationController>();
+        private void Awake() => _anim = GetComponentInChildren<UnitAnimationController>();
 
         public void Resume()
         {
@@ -23,7 +23,7 @@ namespace ArcadeHero2D.Gameplay.Hero
             if (_anim) _anim.SetMoving(false);
         }
 
-        void Update()
+        private void Update()
         {
             if (_moving)
                 transform.Translate(Vector3.right * moveSpeed * Time.deltaTime, Space.World);

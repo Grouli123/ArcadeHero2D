@@ -10,11 +10,11 @@ namespace ArcadeHero2D.Gameplay.Enemy
     {
         [SerializeField] private int reward = 1;
 
-        UnitBase _unit;
-        ICupBankService _cup;
-        ICurrencyService _currency;
+        private UnitBase _unit;
+        private ICupBankService _cup;
+        private ICurrencyService _currency;
 
-        void Awake()
+        private void Awake()
         {
             _unit = GetComponent<UnitBase>();
             _cup = ServiceLocator.Get<ICupBankService>();
@@ -24,15 +24,14 @@ namespace ArcadeHero2D.Gameplay.Enemy
                 _unit.Health.OnDied += OnDied;
         }
 
-        void OnDestroy()
+        private void OnDestroy()
         {
             if (_unit != null && _unit.Health != null)
                 _unit.Health.OnDied -= OnDied;
         }
 
-        void OnDied()
+        private void OnDied()
         {
-            // Сначала в буфер (для мини-игры). Если сервиса нет — в кошелёк напрямую.
             if (_cup != null) _cup.AddBuffered(reward);
             else if (_currency != null) _currency.Add(reward);
         }

@@ -1,5 +1,4 @@
 ﻿using System;
-using ArcadeHero2D.Core.Boot;
 using UnityEngine;
 
 namespace ArcadeHero2D.Core.Flow

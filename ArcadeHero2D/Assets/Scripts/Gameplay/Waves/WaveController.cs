@@ -31,7 +31,7 @@ namespace ArcadeHero2D.Gameplay.Waves
             StartCoroutine(Flow());
         }
 
-        IEnumerator Flow()
+        private IEnumerator Flow()
         {
             GameFlowController.Instance.SetPhase(GamePhase.Journey);
             while (hero.position.x < _targetX) yield return null;
@@ -49,7 +49,7 @@ namespace ArcadeHero2D.Gameplay.Waves
             resultPanel.Show();
         }
 
-        IEnumerator RunWave()
+        private IEnumerator RunWave()
         {
             foreach (var entry in wave.enemies)
             {

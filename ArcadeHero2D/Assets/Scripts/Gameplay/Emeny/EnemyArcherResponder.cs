@@ -1,5 +1,4 @@
 ﻿using ArcadeHero2D.Gameplay.Projectiles;
-using ArcadeHero2D.Domain.Contracts;
 using ArcadeHero2D.Rendering;
 using UnityEngine;
 

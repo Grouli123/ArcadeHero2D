@@ -5,13 +5,13 @@ namespace ArcadeHero2D.Gameplay.Hero
 {
     public sealed class HeroTargeting : MonoBehaviour, ITargetProvider
     {
-        [SerializeField] float radius = 3f;
-        [SerializeField] LayerMask enemyMask;
+        [SerializeField] private float radius = 3f;
+        [SerializeField] private LayerMask enemyMask;
 
         public Transform CurrentTarget { get; private set; }
         public bool HasTarget => CurrentTarget != null;
 
-        void Update()
+        private void Update()
         {
             var hits = Physics2D.OverlapCircleAll(transform.position, radius, enemyMask);
             float best = float.MaxValue;
@@ -20,13 +20,13 @@ namespace ArcadeHero2D.Gameplay.Hero
             foreach (var h in hits)
             {
                 float dx = h.transform.position.x - transform.position.x;
-                if (dx < -0.1f) continue; // берём только тех, кто спереди
+                if (dx < -0.1f) continue; 
                 float d = Mathf.Abs(dx);
                 if (d < best) { best = d; CurrentTarget = h.transform; }
             }
         }
 
-        void OnDrawGizmosSelected()
+        private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.cyan;
             Gizmos.DrawWireSphere(transform.position, radius);

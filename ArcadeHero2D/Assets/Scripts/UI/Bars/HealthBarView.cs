@@ -8,7 +8,7 @@ namespace ArcadeHero2D.UI.Bars
     public sealed class HealthBarView : MonoBehaviour
     {
         [SerializeField] private Slider slider;
-        [SerializeField] private MonoBehaviour damageableProvider; // HeroController / EnemyController
+        [SerializeField] private MonoBehaviour damageableProvider; 
 
         private IDamageable _damageable;
         private IHealth _health;
@@ -35,13 +35,11 @@ namespace ArcadeHero2D.UI.Bars
 
         private void Start()
         {
-            // Ждём один кадр, чтобы UnitBase успел создать Health в своём Awake
             StartCoroutine(BindWhenReady());
         }
 
         private IEnumerator BindWhenReady()
         {
-            // Подстраховка на случай редких гонок
             int safety = 10;
             while ((_health = _damageable.Health) == null && safety-- > 0)
                 yield return null;

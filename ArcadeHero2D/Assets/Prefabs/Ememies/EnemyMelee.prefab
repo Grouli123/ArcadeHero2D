@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 1816875664788816487}
   - component: {fileID: 9113791792666396422}
   - component: {fileID: 1832762266586359778}
-  - component: {fileID: 1892964234712163528}
   - component: {fileID: 5600548690992052926}
   - component: {fileID: 4246201570949191077}
   - component: {fileID: 6716723124011225290}
@@ -21,6 +20,8 @@ GameObject:
   - component: {fileID: 897053521054127393}
   - component: {fileID: 6707739843734251045}
   - component: {fileID: 7401203873721000195}
+  - component: {fileID: 7161770194878632577}
+  - component: {fileID: 1055942687027751503}
   m_Layer: 6
   m_Name: EnemyMelee
   m_TagString: Untagged
@@ -119,55 +120,10 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
---- !u!61 &1892964234712163528
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1811540710448087819}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0.021887682, y: -0.0067747533}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.72, y: 0.32}
-    newSize: {x: 0.16, y: 0.16}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.43307418, y: 0.2360855}
-  m_EdgeRadius: 0
+  m_Constraints: 6
 --- !u!114 &5600548690992052926
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -224,7 +180,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc3dc8e4efa14555927efb61baaae5fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  reward: 1
+  reward: 3
 --- !u!114 &3212791013842464835
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -242,7 +198,7 @@ MonoBehaviour:
   damagePerHit: 2
   hitCooldown: 0.6
   minSpacing: 0.8
-  lane: {fileID: 0}
+  lane: {fileID: 1055942687027751503}
 --- !u!114 &4657663175094234612
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -292,6 +248,7 @@ MonoBehaviour:
   deathOnce: {fileID: 11400000, guid: 1b0ef440c5f7a7b47b976c161ee08dbf, type: 2}
   unit: {fileID: 5600548690992052926}
   player: {fileID: 897053521054127393}
+  minHurtInterval: 0.12
 --- !u!114 &7401203873721000195
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -307,10 +264,59 @@ MonoBehaviour:
   disableOnDeath:
   - {fileID: 5600548690992052926}
   disableColliders:
-  - {fileID: 1892964234712163528}
+  - {fileID: 7161770194878632577}
   rb: {fileID: 1832762266586359778}
   destroyOnDeath: 1
   extraLifetime: 0.15
+--- !u!58 &7161770194878632577
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1811540710448087819}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: -0.019247398}
+  serializedVersion: 2
+  m_Radius: 0.12903143
+--- !u!114 &1055942687027751503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1811540710448087819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f54e9a08303e4e768179fe22e9dfb0d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minSpacing: 0.8
+  spawnOffset: 0.9
 --- !u!1001 &2449034914883430260
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -9,23 +9,23 @@ namespace ArcadeHero2D.Rendering
         [SerializeField] private bool playOnEnable = true;
         [SerializeField] private bool randomStartFrame = false;
 
-        SpriteRenderer _sr;
-        int _frame;
-        int _dir = 1;
-        float _timer;
-        bool _playing;
-        float _speed = 1f;
+        private SpriteRenderer _sr;
+        private int _frame;
+        private int _dir = 1;
+        private float _timer;
+        private bool _playing;
+        private float _speed = 1f;
 
-        bool _oneShotActive;
-        FlipbookClip _returnAfterOneShot;
+        private bool _oneShotActive;
+        private FlipbookClip _returnAfterOneShot;
 
         public bool IsPlaying => _playing;
         public bool IsOneShotActive => _oneShotActive;
         public FlipbookClip CurrentClip => clip;
 
-        void Awake() => _sr = GetComponent<SpriteRenderer>();
+        private void Awake() => _sr = GetComponent<SpriteRenderer>();
 
-        void OnEnable()
+        private void OnEnable()
         {
             if (playOnEnable && clip != null) Play(clip);
         }
@@ -70,7 +70,7 @@ namespace ArcadeHero2D.Rendering
             ApplyFrame();
         }
 
-        void Update()
+        private void Update()
         {
             if (!_playing || clip == null || clip.FrameCount == 0) return;
 
@@ -86,7 +86,7 @@ namespace ArcadeHero2D.Rendering
             }
         }
 
-        void Step()
+        private void Step()
         {
             int count = clip.FrameCount;
 
@@ -106,7 +106,6 @@ namespace ArcadeHero2D.Rendering
                 return;
             }
 
-            // Once
             _frame++;
             if (_frame >= count)
             {
@@ -130,7 +129,7 @@ namespace ArcadeHero2D.Rendering
             ApplyFrame();
         }
 
-        void ApplyFrame()
+        private void ApplyFrame()
         {
             if (_sr != null && clip != null && clip.FrameCount > 0)
                 _sr.sprite = clip.frames[Mathf.Clamp(_frame, 0, clip.FrameCount - 1)];

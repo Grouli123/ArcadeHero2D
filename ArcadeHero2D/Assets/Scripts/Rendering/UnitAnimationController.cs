@@ -10,29 +10,29 @@ namespace ArcadeHero2D.Rendering
         [Header("Clips")]
         [SerializeField] private FlipbookClip idleLoop;
         [SerializeField] private FlipbookClip moveLoop;
-        [SerializeField] private FlipbookClip attackOnce; // one-shot
-        [SerializeField] private FlipbookClip hurtOnce;   // one-shot
-        [SerializeField] private FlipbookClip deathOnce;  // once
+        [SerializeField] private FlipbookClip attackOnce; 
+        [SerializeField] private FlipbookClip hurtOnce;   
+        [SerializeField] private FlipbookClip deathOnce;  
 
         [Header("Auto-bind (optional)")]
         [SerializeField] private UnitBase unit;           
         [SerializeField] private FlipbookPlayer player;   
 
         [Header("Tuning")]
-        [SerializeField] private float minHurtInterval = 0.12f; // анти-спам по урону
+        [SerializeField] private float minHurtInterval = 0.12f; 
 
         enum Overlay { None = 0, Attack = 1, Hurt = 2, Death = 3 }
 
-        bool _moving;
-        Overlay _overlay = Overlay.None;
-        float _overlayTimer;
-        float _lastHurtTime = -999f;
-        bool _dead;
+        private bool _moving;
+        private Overlay _overlay = Overlay.None;
+        private float _overlayTimer;
+        private float _lastHurtTime = -999f;
+        private bool _dead;
 
-        IHealth _health;
-        int _lastHP = -1;
+        private IHealth _health;
+        private int _lastHP = -1;
 
-        void Awake()
+        private void Awake()
         {
             if (!player) player = GetComponent<FlipbookPlayer>();
             if (!unit)   unit   = GetComponentInParent<UnitBase>();
@@ -40,18 +40,18 @@ namespace ArcadeHero2D.Rendering
             PlayBase();
         }
 
-        void OnEnable()  => Subscribe();
-        void OnDisable() => Unsubscribe();
+        private void OnEnable()  => Subscribe();
+        private void OnDisable() => Unsubscribe();
 
-        void Subscribe()
+        private void Subscribe()
         {
             if (_health != null)
             {
-                _health.OnChanged += OnHealthChanged; // (int current,int max)
+                _health.OnChanged += OnHealthChanged; 
                 _health.OnDied    += OnDied;
             }
         }
-        void Unsubscribe()
+        private void Unsubscribe()
         {
             if (_health != null)
             {
@@ -69,7 +69,7 @@ namespace ArcadeHero2D.Rendering
             Subscribe();
         }
 
-        void Update()
+        private void Update()
         {
             if (_overlay != Overlay.None)
             {
@@ -82,14 +82,12 @@ namespace ArcadeHero2D.Rendering
             }
         }
 
-        // ===== События здоровья =====
-        void OnHealthChanged(int current, int max)
+        private void OnHealthChanged(int current, int max)
         {
             if (_dead) return;
 
             if (_lastHP >= 0 && current < _lastHP)
             {
-                // хрт с приоритетом выше атаки + анти-спам
                 if (Time.time - _lastHurtTime >= minHurtInterval)
                 {
                     _lastHurtTime = Time.time;
@@ -98,17 +96,16 @@ namespace ArcadeHero2D.Rendering
             }
             _lastHP = current;
 
-            if (current <= 0) OnDied(); // страховка, если OnDied не пришёл
+            if (current <= 0) OnDied(); 
         }
 
-        void OnDied()
+        private void OnDied()
         {
             if (_dead) return;
             _dead = true;
             PlayOverlay(Overlay.Death, deathOnce, 0.6f, returnToBase:false);
         }
 
-        // ===== Публичное API =====
         public void SetMoving(bool moving)
         {
             if (_dead) return;
@@ -122,7 +119,6 @@ namespace ArcadeHero2D.Rendering
         public void RequestAttack()
         {
             if (_dead || attackOnce == null) return;
-            // атака не прерывает Hurt/Death
             if (_overlay == Overlay.Hurt || _overlay == Overlay.Death) return;
             PlayOverlay(Overlay.Attack, attackOnce, 0.35f, returnToBase:true);
         }
@@ -130,12 +126,11 @@ namespace ArcadeHero2D.Rendering
         public void RequestHurt()
         {
             if (_dead || hurtOnce == null) return;
-            // Hurt прерывает атаку, но не прерывает Death/другой Hurt
             if (_overlay == Overlay.Death || _overlay == Overlay.Hurt) return;
             PlayOverlay(Overlay.Hurt, hurtOnce, 0.35f, returnToBase:true);
         }
 
-        public float PlayDeath() // для внешних хендлеров смерти
+        public float PlayDeath() 
         {
             if (_dead) return 0f;
             _dead = true;
@@ -148,14 +143,13 @@ namespace ArcadeHero2D.Rendering
             return deathOnce.FrameCount * deathOnce.FrameDuration;
         }
 
-        // ===== Внутреннее =====
-        void PlayBase()
+        private void PlayBase()
         {
             var baseClip = (_moving ? moveLoop : idleLoop) ?? idleLoop;
             if (baseClip != null) player.Play(baseClip);
         }
 
-        float PlayOverlay(Overlay ov, FlipbookClip clip, float fallbackDur, bool returnToBase)
+        private float PlayOverlay(Overlay ov, FlipbookClip clip, float fallbackDur, bool returnToBase)
         {
             float dur = (clip != null && clip.FrameCount > 0) ? clip.FrameCount * clip.FrameDuration : fallbackDur;
             _overlay = ov;
@@ -170,7 +164,7 @@ namespace ArcadeHero2D.Rendering
                 }
                 else
                 {
-                    player.Play(clip); // death – без возврата
+                    player.Play(clip); 
                 }
             }
             return dur;

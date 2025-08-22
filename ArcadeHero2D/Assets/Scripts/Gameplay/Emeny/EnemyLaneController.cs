@@ -6,25 +6,31 @@ namespace ArcadeHero2D.Gameplay.Enemy
     public sealed class EnemyLaneController : MonoBehaviour
     {
         [SerializeField] private float minSpacing = 0.8f;
-        private readonly List<EnemyController> _enemies = new();
+        [SerializeField] private float spawnOffset = 0.9f;  // БЫЛО 2.5f
 
-        public float GetSpawnX(float baseX)
+        private readonly List<EnemyController> _enemies = new();
+        private float _nextSlotX;
+
+        public void ResetLane(float startSlotX)
         {
-            if (_enemies.Count == 0) return baseX;
-            float lastX = _enemies[_enemies.Count - 1].transform.position.x;
-            return Mathf.Max(baseX, lastX + minSpacing);
+            _nextSlotX = startSlotX;
+            _enemies.Clear();
         }
+
+        public float ReserveSlotX()
+        {
+            float slot = _nextSlotX;
+            _nextSlotX += minSpacing;
+            return slot;
+        }
+
+        public float GetSpawnXForSlot(float slotX) => slotX + spawnOffset;
 
         public void Register(EnemyController e)
         {
             if (_enemies.Contains(e)) return;
             _enemies.Add(e);
-            e.Health.OnDied += () => Unregister(e);
-        }
-
-        public void Unregister(EnemyController e)
-        {
-            _enemies.Remove(e);
+            e.Health.OnDied += () => _enemies.Remove(e);
         }
 
         public float GetAllowedStepX(EnemyController e, float desiredX, float customMinSpacing)

@@ -1,14 +1,21 @@
 ﻿using UnityEngine;
 
-namespace ArcadeHero2D.Gameplay.Waves
+namespace ArcadeHero2D.Gameplay.Enemy
 {
     public sealed class EnemyFactory : MonoBehaviour
     {
-        [SerializeField] Transform spawnRoot;
+        [SerializeField] private Transform spawnRoot;
 
-        public T Spawn<T>(T prefab, Vector3 pos) where T : Component
+        public EnemyController Spawn(EnemyController prefab, Vector3 pos)
         {
-            return Instantiate(prefab, pos, Quaternion.identity, spawnRoot);
+            if (prefab == null) { Debug.LogError("[Factory] Prefab is null"); return null; }
+            if (spawnRoot == null) { Debug.LogError("[Factory] spawnRoot not set"); return null; }
+
+            var e = Instantiate(prefab, pos, Quaternion.identity, spawnRoot);
+            e.gameObject.name = prefab.name + "_Clone";
+            e.gameObject.SetActive(true);
+            Debug.LogWarning($"[Factory] Spawned {e.name} @ {pos}"); // видно даже при фильтре Info
+            return e;
         }
     }
 }

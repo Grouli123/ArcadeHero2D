@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System;
 using UnityEngine;
 
 namespace ArcadeHero2D.Core.CameraSys
@@ -10,14 +11,20 @@ namespace ArcadeHero2D.Core.CameraSys
         [SerializeField] private Transform bottomAnchor;
         [SerializeField] private float moveTime = 0.7f;
 
-        public void MoveToTop()  => StartCoroutine(MoveTo(topAnchor.position));
-        public void MoveToBottom()=> StartCoroutine(MoveTo(bottomAnchor.position));
+        public float MoveTime => moveTime;
+        public bool IsMoving { get; private set; }
+        public event Action OnMoveCompleted;
+
+        public void MoveToTop()    => StartCoroutine(MoveTo(topAnchor.position));
+        public void MoveToBottom() => StartCoroutine(MoveTo(bottomAnchor.position));
 
         IEnumerator MoveTo(Vector3 target)
         {
             if (rig == null) rig = transform;
             Vector3 start = rig.position;
             float t = 0f;
+            IsMoving = true;
+
             while (t < moveTime)
             {
                 t += Time.deltaTime;
@@ -26,6 +33,8 @@ namespace ArcadeHero2D.Core.CameraSys
                 yield return null;
             }
             rig.position = target;
+            IsMoving = false;
+            OnMoveCompleted?.Invoke();
         }
     }
 }

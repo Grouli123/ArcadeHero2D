@@ -1,5 +1,4 @@
 ﻿using ArcadeHero2D.Domain.Contracts;
-using ArcadeHero2D.Gameplay.Projectiles;
 using UnityEngine;
 
 namespace ArcadeHero2D.Gameplay.Enemy
@@ -16,16 +15,20 @@ namespace ArcadeHero2D.Gameplay.Enemy
         private Transform _hero;
         private float _cd;
         private EnemyController _self;
+        private SlotMover _slot;
 
-        private void Awake() => _self = GetComponent<EnemyController>();
-        private void OnEnable() => ArcProjectile.OnHeroHitEnemy += OnHitEvent;
-        private void OnDisable() => ArcProjectile.OnHeroHitEnemy -= OnHitEvent;
+        private void Awake()
+        {
+            _self = GetComponent<EnemyController>();
+            _slot = GetComponent<SlotMover>();
+        }
 
         public void Init(Transform hero) => _hero = hero;
 
         public void OnHeroHit()
         {
             if (_hero == null) return;
+            if (_slot != null && !_slot.InSlot) return;
             if (_cd > 0f) return;
 
             float dx = _hero.position.x - transform.position.x;
@@ -52,12 +55,6 @@ namespace ArcadeHero2D.Gameplay.Enemy
         private void Update()
         {
             if (_cd > 0f) _cd -= Time.deltaTime;
-        }
-
-        private void OnHitEvent(EnemyController enemy, int dmg)
-        {
-            if (enemy == null || enemy.gameObject != gameObject) return;
-            OnHeroHit();
         }
     }
 }

@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 6716723124011225290}
   - component: {fileID: 7143514526711394721}
   - component: {fileID: 3212791013842464835}
+  - component: {fileID: 4657663175094234612}
   m_Layer: 6
   m_Name: EnemyMelee
   m_TagString: Untagged
@@ -81,8 +82,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 21300000, guid: eb7a0f12d70f1af4795a172d7773ed70, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -151,18 +152,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.021887682, y: -0.0067747533}
   m_SpriteTilingProperty:
-    border: {x: 0.049999997, y: 0.049999997, z: 0.049999997, w: 0.049999997}
+    border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.16, y: 0.16}
+    oldSize: {x: 0.72, y: 0.32}
     newSize: {x: 0.16, y: 0.16}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.16, y: 0.16}
+  m_Size: {x: 0.43307418, y: 0.2360855}
   m_EdgeRadius: 0
 --- !u!114 &5600548690992052926
 MonoBehaviour:
@@ -177,7 +178,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startMaxHP: 10
-  mover: {fileID: 4246201570949191077}
+  slotMover: {fileID: 4657663175094234612}
   attack: {fileID: 6716723124011225290}
 --- !u!114 &4246201570949191077
 MonoBehaviour:
@@ -239,6 +240,21 @@ MonoBehaviour:
   hitCooldown: 0.6
   minSpacing: 0.8
   lane: {fileID: 0}
+--- !u!114 &4657663175094234612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1811540710448087819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9b3a77b65d843c29294ad8142bac195, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  approachSpeed: 2
+  reachEps: 0.02
+  lockToLaneY: 1
 --- !u!1001 &2449034914883430260
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -248,12 +264,24 @@ PrefabInstance:
     m_TransformParent: {fileID: 1816875664788816487}
     m_Modifications:
     - target: {fileID: 578152235980794177, guid: 53fc9db7bab583d43b9127a353adf3cf, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 578152235980794177, guid: 53fc9db7bab583d43b9127a353adf3cf, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2813390660642959903, guid: 53fc9db7bab583d43b9127a353adf3cf, type: 3}
       propertyPath: m_Name
       value: HPBar_World
+      objectReference: {fileID: 0}
+    - target: {fileID: 2897586437334698925, guid: 53fc9db7bab583d43b9127a353adf3cf, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 2897586437334698925, guid: 53fc9db7bab583d43b9127a353adf3cf, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3325176824559566374, guid: 53fc9db7bab583d43b9127a353adf3cf, type: 3}
       propertyPath: damageableProvider
@@ -297,11 +325,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3694849280376477739, guid: 53fc9db7bab583d43b9127a353adf3cf, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.391
+      value: -5.3654
       objectReference: {fileID: 0}
     - target: {fileID: 3694849280376477739, guid: 53fc9db7bab583d43b9127a353adf3cf, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -116.427
+      value: -116.5495
       objectReference: {fileID: 0}
     - target: {fileID: 3694849280376477739, guid: 53fc9db7bab583d43b9127a353adf3cf, type: 3}
       propertyPath: m_LocalPosition.z
@@ -339,6 +367,22 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5818541204256114322, guid: 53fc9db7bab583d43b9127a353adf3cf, type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5818541204256114322, guid: 53fc9db7bab583d43b9127a353adf3cf, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: b384d2640c474ca44b1af49a92a68c33, type: 3}
+    - target: {fileID: 7972994939871997576, guid: 53fc9db7bab583d43b9127a353adf3cf, type: 3}
+      propertyPath: m_Value
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7972994939871997576, guid: 53fc9db7bab583d43b9127a353adf3cf, type: 3}
+      propertyPath: m_MinValue
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7972994939871997576, guid: 53fc9db7bab583d43b9127a353adf3cf, type: 3}
       propertyPath: m_HandleRect
       value: 
@@ -348,7 +392,8 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 3025998083840797128, guid: 53fc9db7bab583d43b9127a353adf3cf, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 53fc9db7bab583d43b9127a353adf3cf, type: 3}

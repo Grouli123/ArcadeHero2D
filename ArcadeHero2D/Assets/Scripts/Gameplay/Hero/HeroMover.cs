@@ -3,18 +3,17 @@ using UnityEngine;
 
 namespace ArcadeHero2D.Gameplay.Hero
 {
-    public sealed class HeroMover : MonoBehaviour, IMovable
+    public sealed class HeroMover : MonoBehaviour
     {
-        [field: SerializeField] public float MoveSpeed { get; private set; } = 1.5f;
-        bool _stopped;
+        [SerializeField] float moveSpeed = 1.5f;
+        bool _moving;
+        public void Resume() => _moving = true;
+        public void Stop()   => _moving = false;
 
-        public void Move(Vector2 direction, float speed)
+        void Update()
         {
-            if (_stopped) return;
-            transform.Translate(direction * speed * Time.deltaTime, Space.World);
+            if (_moving)
+                transform.Translate(Vector3.right * moveSpeed * Time.deltaTime, Space.World);
         }
-
-        public void Stop() => _stopped = true;
-        public void Resume() => _stopped = false;
     }
 }

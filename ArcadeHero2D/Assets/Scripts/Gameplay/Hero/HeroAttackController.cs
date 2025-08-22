@@ -12,9 +12,11 @@ namespace ArcadeHero2D.Gameplay.Hero
         IStatsService _stats;
         float _cd;
 
+        public bool AttackEnabled { get; set; } = true;
+
         public int AttackDamage => _stats.Attack;
         public float AttackRate  => _stats.AttackSpeed;
-        public bool CanAttack    => _cd <= 0f;
+        public bool CanAttack    => _cd <= 0f && AttackEnabled;
 
         void Awake() => _stats = ServiceLocator.Get<IStatsService>();
         void Update() { if (_cd > 0) _cd -= Time.deltaTime; }

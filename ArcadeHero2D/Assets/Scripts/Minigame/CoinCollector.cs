@@ -8,15 +8,26 @@ namespace ArcadeHero2D.Minigame
     {
         public event Action<int> OnCoinCollected;
         public int TotalCollected { get; private set; }
+        public int CollectedCount { get; private set; }
 
-        private void OnTriggerEnter2D(Collider2D other)
+        void Awake() => GetComponent<Collider2D>().isTrigger = true; // стакан — ТРИГГЕР
+
+        void OnTriggerEnter2D(Collider2D other) => Handle(other);
+        void OnTriggerStay2D  (Collider2D other) => Handle(other);
+
+        void Handle(Collider2D other)
         {
             if (!other.TryGetComponent<Coin>(out var coin)) return;
             TotalCollected += coin.Value;
+            CollectedCount += 1;
             OnCoinCollected?.Invoke(coin.Value);
             Destroy(other.gameObject);
         }
 
-        public void ResetSum() => TotalCollected = 0;
+        public void ResetSum()
+        {
+            TotalCollected = 0;
+            CollectedCount = 0;
+        }
     }
 }

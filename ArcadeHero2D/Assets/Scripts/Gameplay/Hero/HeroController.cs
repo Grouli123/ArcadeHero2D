@@ -7,9 +7,9 @@ namespace ArcadeHero2D.Gameplay.Hero
 {
     public sealed class HeroController : UnitBase
     {
-        [SerializeField] HeroMover mover;
-        [SerializeField] HeroTargeting targeting;
-        [SerializeField] HeroAttackController attack;
+        [SerializeField] public HeroMover mover;
+        [SerializeField] public HeroTargeting targeting;
+        [SerializeField] public HeroAttackController attack;
 
         IStatsService _stats;
 
@@ -17,29 +17,14 @@ namespace ArcadeHero2D.Gameplay.Hero
         {
             base.Awake();
             _stats = ServiceLocator.Get<IStatsService>();
-            // Подгоняем HP под статы:
-            _health.IncreaseMax(_stats.MaxHP - _health.Max, healToFull: true);
+            _health.IncreaseMax(_stats.MaxHP - _health.Max, true);
             _stats.OnChanged += ApplyStatsToHealth;
         }
 
         void ApplyStatsToHealth()
         {
-            // если MaxHP вырос — обновим
             int delta = _stats.MaxHP - _health.Max;
             if (delta != 0) _health.IncreaseMax(delta, true);
-        }
-
-        void Update()
-        {
-            if (targeting.HasTarget)
-            {
-                mover.Stop();
-                attack.TryAttack(targeting.CurrentTarget);
-            }
-            else
-            {
-                mover.Move(Vector2.right, mover.MoveSpeed);
-            }
         }
     }
 }

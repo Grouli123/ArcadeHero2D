@@ -6,19 +6,24 @@ namespace ArcadeHero2D.Gameplay.Enemy
 {
     public sealed class EnemyController : UnitBase
     {
-        [SerializeField] private EnemyMover mover;
+        [SerializeField] private SlotMover slotMover;
         [SerializeField] private EnemyAttack attack;
-
         private IEnemyResponder[] _responders;
+
+        public bool IsReady => slotMover == null || slotMover.InSlot;
 
         public void Init(Transform hero)
         {
-            mover.SetTarget(hero);
-            mover.SetLaneY(hero.position.y);
-            attack.SetTarget(hero);
-
+            if (slotMover != null) slotMover.SetLaneY(hero.position.y);
+            if (attack != null) attack.SetTarget(hero);
             _responders = GetComponents<IEnemyResponder>();
             foreach (var r in _responders) r.Init(hero);
+        }
+
+        public void AssignSlot(float slotX)
+        {
+            if (slotMover == null) return;
+            slotMover.SetSlotX(slotX);
         }
     }
 }

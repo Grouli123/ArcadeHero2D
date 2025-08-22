@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91bf52a48917449ca41da77a11bf5fca, type: 3}
+  m_Name: HeroAttack
+  m_EditorClassIdentifier: 
+  frames:
+  - {fileID: 21300000, guid: be1ee32eb4d383d4c880ee2e5bd8fc22, type: 3}
+  - {fileID: 21300000, guid: 3e9bccfa8e9286842887e42754ccc606, type: 3}
+  - {fileID: 21300000, guid: d63fb6662049bb1458fb5d1187b6e7a8, type: 3}
+  fps: 12
+  loopMode: 1
+  useUnscaledTime: 0

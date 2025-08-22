@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91bf52a48917449ca41da77a11bf5fca, type: 3}
+  m_Name: MeleeHurt
+  m_EditorClassIdentifier: 
+  frames:
+  - {fileID: 21300000, guid: a229b1794aece6a4a8c64e999de04d49, type: 3}
+  - {fileID: 21300000, guid: 2fa1556c0f2cab8499e962f1f7ddfe5f, type: 3}
+  - {fileID: 21300000, guid: f8469a80161573f408da72c8d567887e, type: 3}
+  - {fileID: 21300000, guid: b7ec222eb54624b44b2635382133fe9b, type: 3}
+  fps: 12
+  loopMode: 1
+  useUnscaledTime: 0

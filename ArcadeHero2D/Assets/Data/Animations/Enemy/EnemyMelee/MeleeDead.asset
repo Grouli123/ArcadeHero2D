@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91bf52a48917449ca41da77a11bf5fca, type: 3}
+  m_Name: MeleeDead
+  m_EditorClassIdentifier: 
+  frames:
+  - {fileID: 21300000, guid: 56741910929db214bab27f7ab39f66e8, type: 3}
+  - {fileID: 21300000, guid: 94f1d494f28359f46bd29eb464409488, type: 3}
+  - {fileID: 21300000, guid: caeea4b1625ca224c8d1b21314d081ed, type: 3}
+  - {fileID: 21300000, guid: bab08c6b43b76e94ab6d3074482c87e7, type: 3}
+  fps: 12
+  loopMode: 1
+  useUnscaledTime: 0

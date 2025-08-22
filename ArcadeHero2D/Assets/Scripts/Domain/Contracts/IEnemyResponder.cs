@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 
-namespace ArcadeHero2D.Domain.Contracts
+namespace ArcadeHero2D.Gameplay.Enemy
 {
     public interface IEnemyResponder
     {
         void Init(Transform hero);
-        void OnHeroHit();
+        void OnHeroAttacked();
     }
 }

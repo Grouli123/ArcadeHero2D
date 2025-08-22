@@ -1,27 +1,76 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace ArcadeHero2D.Minigame
 {
     public sealed class CupDragController : MonoBehaviour
     {
-        [SerializeField] private float minX = -3f;
-        [SerializeField] private float maxX = 3f;
-        [SerializeField] private float dragSpeed = 10f;
-        private Camera _cam;
-        private bool _drag;
+        [Header("Move")]
+        [SerializeField] float dragLerp = 12f;
+        [SerializeField] float minX = -3.5f;
+        [SerializeField] float maxX =  3.5f;
 
-        private void Awake() => _cam = Camera.main;
+        [Header("Input")]
+        [SerializeField] bool acceptAnywhere = true; // двигать по любому тапу (а не только по коллайдеру)
 
-        private void Update()
+        public event Action OnUserInteract; // первый тап/удержание после EnableInput(true)
+
+        bool _interactable;
+        bool _isPointerDown;
+        bool _interactionSent;
+        Camera _cam;
+
+        public void EnableInput(bool enabled)
         {
-            if (Input.GetMouseButtonDown(0)) _drag = true;
-            if (Input.GetMouseButtonUp(0)) _drag = false;
-            if (!_drag) return;
-            var pos = _cam.ScreenToWorldPoint(Input.mousePosition);
-            float x = Mathf.Clamp(pos.x, minX, maxX);
+            _interactable = enabled;
+            _isPointerDown = false;
+            _interactionSent = false;
+        }
+
+        void Awake()
+        {
+            _cam = Camera.main;
+            EnableInput(false);
+        }
+
+        void Update()
+        {
+            if (!_interactable) return;
+
+            // pointer down / up (мышь или тач)
+            bool pointerDownNow = Input.GetMouseButton(0) || Input.touchCount > 0;
+
+            // первый кадр нажатия — шлём событие
+            if (pointerDownNow && !_isPointerDown && !_interactionSent)
+            {
+                _interactionSent = true;
+                OnUserInteract?.Invoke();
+            }
+            _isPointerDown = pointerDownNow;
+
+            if (!_isPointerDown) return;
+
+            // вычисляем целевой X из курсора/тача
+            Vector3 m = Input.touchCount > 0 ? (Vector3)Input.GetTouch(0).position : Input.mousePosition;
+            var w = _cam != null ? _cam.ScreenToWorldPoint(m) : m;
+            float targetX = Mathf.Clamp(w.x, minX, maxX);
+
+            // сглаженное перемещение
             var p = transform.position;
-            p.x = Mathf.Lerp(p.x, x, Time.deltaTime * dragSpeed);
+            p.x = Mathf.Lerp(p.x, targetX, 1f - Mathf.Exp(-dragLerp * Time.deltaTime));
             transform.position = p;
         }
+
+        // Если хочешь перемещать только при попадании по самому стакану — поставь acceptAnywhere = false
+        // и раскомментируй OnMouseDown/OnMouseUp ниже, плюс доп. логику для drag:
+        /*
+        void OnMouseDown()
+        {
+            if (!_interactable || acceptAnywhere) return;
+            _isPointerDown = true;
+            if (!_interactionSent) { _interactionSent = true; OnUserInteract?.Invoke(); }
+        }
+        void OnMouseUp() { if (!acceptAnywhere) _isPointerDown = false; }
+        */
     }
 }

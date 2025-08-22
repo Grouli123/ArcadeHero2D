@@ -1,41 +1,63 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace ArcadeHero2D.Minigame
 {
     public sealed class CupPourController : MonoBehaviour
     {
-        [SerializeField] private Transform spawnPoint;
-        [SerializeField] private Coin coinPrefab;
-        [SerializeField] private float interval = 0.05f;
-        [SerializeField] private float initialImpulse = 0.5f;
+        [SerializeField] Coin coinPrefab;
+        [SerializeField] Transform spawnPoint;
+        [SerializeField] float coinsPerSecond = 4f; // медленнее по умолчанию
+        [SerializeField] float initialImpulse = 0.35f;
 
-        public int ToSpawn { get; private set; }
-        public int Spawned { get; private set; }
         public bool Pouring { get; private set; }
-        public System.Action OnAllSpawned;
+        public Action OnAllSpawned;
+
+        int _left;
+        Coroutine _routine;
+
+        public void ConfigureRate(float cps) => coinsPerSecond = Mathf.Max(0.1f, cps);
 
         public void Begin(int count)
         {
-            if (Pouring) return;
-            ToSpawn = Mathf.Max(0, count);
-            Spawned = 0;
-            StartCoroutine(Pour());
+            StopNow();
+            _left = Mathf.Max(0, count);
+            _routine = StartCoroutine(PourRoutine());
         }
 
-        IEnumerator Pour()
+        public void StopNow()
         {
+            if (_routine != null) StopCoroutine(_routine);
+            _routine = null;
+            Pouring = false;
+        }
+
+        IEnumerator PourRoutine()
+        {
+            if (_left <= 0) { OnAllSpawned?.Invoke(); yield break; }
+
             Pouring = true;
-            while (Spawned < ToSpawn)
+            float interval = 1f / coinsPerSecond;
+
+            while (_left > 0)
             {
-                var c = Instantiate(coinPrefab, spawnPoint.position, Quaternion.identity);
-                c.SetValue(1);
-                c.Body.AddForce(Vector2.right * Random.Range(0.05f, 0.15f) + Vector2.up * initialImpulse, ForceMode2D.Impulse);
-                Spawned++;
+                SpawnOne();
+                _left--;
                 yield return new WaitForSeconds(interval);
             }
+
             Pouring = false;
             OnAllSpawned?.Invoke();
+        }
+
+        void SpawnOne()
+        {
+            var coin = Instantiate(coinPrefab, spawnPoint.position, Quaternion.identity);
+            if (coin.Body != null)
+            {
+                coin.Body.AddForce(Vector2.right * UnityEngine.Random.Range(-initialImpulse, initialImpulse), ForceMode2D.Impulse);
+            }
         }
     }
 }

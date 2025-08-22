@@ -1,5 +1,6 @@
 ﻿using ArcadeHero2D.Gameplay.Projectiles;
 using ArcadeHero2D.Domain.Contracts;
+using ArcadeHero2D.Rendering;
 using UnityEngine;
 
 namespace ArcadeHero2D.Gameplay.Enemy
@@ -14,12 +15,16 @@ namespace ArcadeHero2D.Gameplay.Enemy
         private Transform _hero;
         private float _cd;
         private SlotMover _slot;
+        private UnitAnimationController _anim;
 
-        private void Awake() => _slot = GetComponent<SlotMover>();
+        public void Init(Transform hero)
+        {
+            _hero = hero;
+            _slot = GetComponent<SlotMover>();
+            _anim = GetComponentInChildren<UnitAnimationController>();
+        }
 
-        public void Init(Transform hero) => _hero = hero;
-
-        public void OnHeroHit()
+        public void OnHeroAttacked()
         {
             if (_hero == null) return;
             if (_slot != null && !_slot.InSlot) return;
@@ -28,6 +33,8 @@ namespace ArcadeHero2D.Gameplay.Enemy
             var p = Instantiate(arrowPrefab, firePoint.position, Quaternion.identity);
             p.Launch(firePoint.position, _hero.position, damagePerShot);
             _cd = shotCooldown;
+
+            if (_anim) _anim.RequestAttack();
         }
 
         private void Update()

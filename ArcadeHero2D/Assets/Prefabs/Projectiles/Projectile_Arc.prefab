@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4186821357295872353}
   - component: {fileID: 8594427844078044588}
   - component: {fileID: 3140472318533008989}
+  - component: {fileID: 236323209558844005}
   m_Layer: 7
   m_Name: Projectile_Arc
   m_TagString: Untagged
@@ -189,3 +190,18 @@ MonoBehaviour:
   enemyMask:
     serializedVersion: 2
     m_Bits: 64
+--- !u!114 &236323209558844005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3645202052510754714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 359d8e72f40949419c7d0c09afca6673, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clip: {fileID: 11400000, guid: d30ecbb2083b3f9499c17d6d2d5bae12, type: 2}
+  playOnEnable: 1
+  randomStartFrame: 0

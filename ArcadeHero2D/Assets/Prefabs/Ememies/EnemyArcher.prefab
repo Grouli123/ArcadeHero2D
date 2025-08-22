@@ -18,6 +18,9 @@ GameObject:
   - component: {fileID: 7143514526711394721}
   - component: {fileID: 5969773806871190715}
   - component: {fileID: 569583224259937674}
+  - component: {fileID: 2330303846653490303}
+  - component: {fileID: 3400701182398891607}
+  - component: {fileID: 5088231152464086375}
   m_Layer: 6
   m_Name: EnemyArcher
   m_TagString: Untagged
@@ -254,6 +257,59 @@ MonoBehaviour:
   approachSpeed: 2
   reachEps: 0.02
   lockToLaneY: 1
+--- !u!114 &2330303846653490303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1811540710448087819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 359d8e72f40949419c7d0c09afca6673, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clip: {fileID: 11400000, guid: 0762be0b56721fd4aab0b4728392e9ca, type: 2}
+  playOnEnable: 1
+  randomStartFrame: 0
+--- !u!114 &3400701182398891607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1811540710448087819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2962f89c3001478db3ee7301f03ab3fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  idleLoop: {fileID: 11400000, guid: 0762be0b56721fd4aab0b4728392e9ca, type: 2}
+  moveLoop: {fileID: 11400000, guid: 0762be0b56721fd4aab0b4728392e9ca, type: 2}
+  attackOnce: {fileID: 11400000, guid: a49f3d1f969814940a11534ddca114c9, type: 2}
+  hurtOnce: {fileID: 11400000, guid: 1a6ede98bf3391d4a872d86d9b821777, type: 2}
+  deathOnce: {fileID: 11400000, guid: f21c3c3d1e60a404ca60339a4b0cedd0, type: 2}
+  unit: {fileID: 5600548690992052926}
+  player: {fileID: 2330303846653490303}
+--- !u!114 &5088231152464086375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1811540710448087819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 458d50027a874db38b94c4627254f8d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  disableOnDeath:
+  - {fileID: 5600548690992052926}
+  disableColliders:
+  - {fileID: 1892964234712163528}
+  rb: {fileID: 1832762266586359778}
+  destroyOnDeath: 1
+  extraLifetime: 0.15
 --- !u!1 &5162502570332059157
 GameObject:
   m_ObjectHideFlags: 0

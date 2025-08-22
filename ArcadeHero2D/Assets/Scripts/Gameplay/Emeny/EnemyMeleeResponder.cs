@@ -1,4 +1,5 @@
 ﻿using ArcadeHero2D.Domain.Contracts;
+using ArcadeHero2D.Rendering;
 using UnityEngine;
 
 namespace ArcadeHero2D.Gameplay.Enemy
@@ -16,19 +17,19 @@ namespace ArcadeHero2D.Gameplay.Enemy
         private float _cd;
         private EnemyController _self;
         private SlotMover _slot;
+        private UnitAnimationController _anim;
 
-        private void Awake()
+        public void Init(Transform hero)
         {
+            _hero = hero;
             _self = GetComponent<EnemyController>();
             _slot = GetComponent<SlotMover>();
+            _anim = GetComponentInChildren<UnitAnimationController>();
         }
 
-        public void Init(Transform hero) => _hero = hero;
-
-        public void OnHeroHit()
+        public void OnHeroAttacked()
         {
             if (_hero == null) return;
-            if (_slot != null && !_slot.InSlot) return;
             if (_cd > 0f) return;
 
             float dx = _hero.position.x - transform.position.x;
@@ -49,6 +50,8 @@ namespace ArcadeHero2D.Gameplay.Enemy
                 if (_hero.TryGetComponent<IDamageable>(out var d))
                     d.TakeDamage(damagePerHit);
                 _cd = hitCooldown;
+
+                if (_anim) _anim.RequestAttack();
             }
         }
 

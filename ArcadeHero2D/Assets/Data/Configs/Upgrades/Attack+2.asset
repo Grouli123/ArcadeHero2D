@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Attack+2
   m_EditorClassIdentifier: 
   title: +2 Attack
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 9505fb97a1e99b546a6ecb296d9cf8a5, type: 3}
   price: 3
   statType: 0
   intValue: 2

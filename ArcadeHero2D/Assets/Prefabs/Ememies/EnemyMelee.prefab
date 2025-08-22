@@ -18,6 +18,9 @@ GameObject:
   - component: {fileID: 7143514526711394721}
   - component: {fileID: 3212791013842464835}
   - component: {fileID: 4657663175094234612}
+  - component: {fileID: 897053521054127393}
+  - component: {fileID: 6707739843734251045}
+  - component: {fileID: 7401203873721000195}
   m_Layer: 6
   m_Name: EnemyMelee
   m_TagString: Untagged
@@ -255,6 +258,59 @@ MonoBehaviour:
   approachSpeed: 2
   reachEps: 0.02
   lockToLaneY: 1
+--- !u!114 &897053521054127393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1811540710448087819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 359d8e72f40949419c7d0c09afca6673, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clip: {fileID: 11400000, guid: 0f1cd29c70824f0448ea13543d28139e, type: 2}
+  playOnEnable: 1
+  randomStartFrame: 0
+--- !u!114 &6707739843734251045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1811540710448087819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2962f89c3001478db3ee7301f03ab3fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  idleLoop: {fileID: 11400000, guid: 0f1cd29c70824f0448ea13543d28139e, type: 2}
+  moveLoop: {fileID: 11400000, guid: 8a13bfe27e55dd24883f6ca5245c0a74, type: 2}
+  attackOnce: {fileID: 11400000, guid: 78d8206fc76bb604d97771eb88a48aed, type: 2}
+  hurtOnce: {fileID: 11400000, guid: fc54821a16141db4e83d577a3ba15c98, type: 2}
+  deathOnce: {fileID: 11400000, guid: 1b0ef440c5f7a7b47b976c161ee08dbf, type: 2}
+  unit: {fileID: 5600548690992052926}
+  player: {fileID: 897053521054127393}
+--- !u!114 &7401203873721000195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1811540710448087819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 458d50027a874db38b94c4627254f8d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  disableOnDeath:
+  - {fileID: 5600548690992052926}
+  disableColliders:
+  - {fileID: 1892964234712163528}
+  rb: {fileID: 1832762266586359778}
+  destroyOnDeath: 1
+  extraLifetime: 0.15
 --- !u!1001 &2449034914883430260
 PrefabInstance:
   m_ObjectHideFlags: 0

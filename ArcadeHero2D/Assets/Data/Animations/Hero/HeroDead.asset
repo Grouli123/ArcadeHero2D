@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91bf52a48917449ca41da77a11bf5fca, type: 3}
+  m_Name: HeroDead
+  m_EditorClassIdentifier: 
+  frames:
+  - {fileID: 21300000, guid: 08d7ea42b6efad24493b9d21f7b1d482, type: 3}
+  - {fileID: 21300000, guid: 12907539dacd06741a1aaf6b21dcbe8a, type: 3}
+  - {fileID: 21300000, guid: 4796362b0bf365048a7743c8d40a8bf2, type: 3}
+  - {fileID: 21300000, guid: 0715f2231602dda4e8eedca2e192df40, type: 3}
+  fps: 12
+  loopMode: 1
+  useUnscaledTime: 0

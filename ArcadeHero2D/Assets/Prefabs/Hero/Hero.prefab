@@ -16,6 +16,8 @@ GameObject:
   - component: {fileID: 2851093001705231485}
   - component: {fileID: 3139786792785567307}
   - component: {fileID: 5270321738142091543}
+  - component: {fileID: 2134466902310024306}
+  - component: {fileID: 8074946865499933931}
   m_Layer: 3
   m_Name: Hero
   m_TagString: Untagged
@@ -182,7 +184,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed9a2212074945a6908678b42535eb00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <MoveSpeed>k__BackingField: 1.5
+  moveSpeed: 1.5
 --- !u!114 &3139786792785567307
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -213,6 +215,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 3140472318533008989, guid: 89d097bc50af6124d899be0b658857d9, type: 3}
   firePoint: {fileID: 1351657682832559358}
+--- !u!114 &2134466902310024306
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3258957426409688815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 359d8e72f40949419c7d0c09afca6673, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clip: {fileID: 11400000, guid: 2a5aedc365357b546845e31dd497b200, type: 2}
+  playOnEnable: 1
+  randomStartFrame: 0
+--- !u!114 &8074946865499933931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3258957426409688815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2962f89c3001478db3ee7301f03ab3fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  idleLoop: {fileID: 11400000, guid: 2a5aedc365357b546845e31dd497b200, type: 2}
+  moveLoop: {fileID: 11400000, guid: 5bd6b7dfdf30f4d4e979e98124b6c680, type: 2}
+  attackOnce: {fileID: 11400000, guid: 32bd7eb6e805cc84793f76f63d962ad3, type: 2}
+  hurtOnce: {fileID: 11400000, guid: 66a6a2bcad03e474cb9cfd855a7ff0e1, type: 2}
+  deathOnce: {fileID: 11400000, guid: b4b9168e3856bdb4eb1c94f02f50763f, type: 2}
+  unit: {fileID: 4243704746038680943}
+  player: {fileID: 2134466902310024306}
 --- !u!1 &3480801478920821444
 GameObject:
   m_ObjectHideFlags: 0
@@ -370,7 +406,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7972994939871997576, guid: 53fc9db7bab583d43b9127a353adf3cf, type: 3}
       propertyPath: m_Value
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7972994939871997576, guid: 53fc9db7bab583d43b9127a353adf3cf, type: 3}
       propertyPath: m_HandleRect

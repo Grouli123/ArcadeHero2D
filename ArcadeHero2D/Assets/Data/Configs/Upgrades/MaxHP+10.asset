@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MaxHP+10
   m_EditorClassIdentifier: 
   title: +10 HP
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: bfab82d81eb3c294d80ae4534cd762d6, type: 3}
   price: 3
   statType: 2
   intValue: 10

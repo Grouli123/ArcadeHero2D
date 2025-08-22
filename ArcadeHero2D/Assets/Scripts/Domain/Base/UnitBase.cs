@@ -19,9 +19,10 @@ namespace ArcadeHero2D.Domain.Base
 
         public virtual void TakeDamage(int amount) => _health.Take(amount);
 
+        // Важно: ничего не удаляем! Смерть и удаление управляются UnitDeathHandler/RewardOnDeath.
         protected virtual void OnDied()
         {
-            Destroy(gameObject);
+            // intentionally empty
         }
     }
 }

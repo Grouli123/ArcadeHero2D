@@ -10,15 +10,17 @@ using ArcadeHero2D.UI.HUD;
 using UnityEngine;
 using ArcadeHero2D.Core.Boot;
 using ArcadeHero2D.Domain.Contracts;
+using ArcadeHero2D.Domain.Base; // UnitBase
 
 namespace ArcadeHero2D.Gameplay.Waves
 {
     public sealed class WaveSequenceController : MonoBehaviour
     {
+        [Header("Refs")]
         [SerializeField] private WaveConfig[] waves;
         [SerializeField] private EnemyFactory factory;
         [SerializeField] private EnemyLaneController lane;
-        [SerializeField] private Transform hero;
+        [SerializeField] private Transform hero;                   // Transform героя
         [SerializeField] private JourneyProgressBar journeyBar;
         [SerializeField] private CoinMiniGameController miniGame;
         [SerializeField] private UI.WaveResultPanel resultPanel;
@@ -29,73 +31,116 @@ namespace ArcadeHero2D.Gameplay.Waves
         private HeroMover _heroMover;
         private ICupBankService _cup;
 
+        // для безопасной обработки смерти героя
+        [SerializeField] private UnitBase heroUnit;                // опционально закинь UnitBase героя
+        private IHealth _heroHealth;
+        private bool _heroDead;
+
         void Awake()
         {
-            _heroAttack = hero != null ? hero.GetComponentInChildren<HeroAttackController>() : null;
-            _heroMover  = hero != null ? hero.GetComponent<HeroMover>() : null;
+            _heroAttack = hero ? hero.GetComponentInChildren<HeroAttackController>() : null;
+            _heroMover  = hero ? hero.GetComponent<HeroMover>() : null;
 
             if (turnController == null) turnController = gameObject.AddComponent<BattleTurnController>();
             if (_heroAttack != null) turnController.Bind(_heroAttack, hero);
 
             _cup = ServiceLocator.Get<ICupBankService>();
+
+            // привяжем здоровье героя, чтобы знать момент смерти
+            if (heroUnit == null && hero != null) heroUnit = hero.GetComponent<UnitBase>();
+            if (heroUnit != null && heroUnit.Health != null)
+            {
+                _heroHealth = heroUnit.Health;
+                _heroHealth.OnDied += OnHeroDied;
+            }
+        }
+
+        void OnDestroy()
+        {
+            if (_heroHealth != null) _heroHealth.OnDied -= OnHeroDied;
         }
 
         void Start()
         {
-            if (hero == null || journeyBar == null || miniGame == null || resultPanel == null || factory == null || lane == null)
-            { Debug.LogError("[WaveSeq] Missing refs"); enabled = false; return; }
-            if (waves == null || waves.Length == 0)
-            { Debug.LogError("[WaveSeq] waves[] is empty"); enabled = false; return; }
-
+            if (!CheckRefs()) { enabled = false; return; }
             StartCoroutine(RunSequence());
+        }
+
+        bool CheckRefs()
+        {
+            if (journeyBar == null || miniGame == null || resultPanel == null || factory == null || lane == null)
+            { Debug.LogError("[WaveSeq] Missing refs"); return false; }
+            if (waves == null || waves.Length == 0)
+            { Debug.LogError("[WaveSeq] waves[] is empty"); return false; }
+            return true;
+        }
+
+        void OnHeroDied()
+        {
+            _heroDead = true;
+            // останавливаем движение сразу
+            if (_heroMover != null) _heroMover.Stop();
+            if (_heroAttack != null) _heroAttack.AttackEnabled = false;
         }
 
         IEnumerator RunSequence()
         {
             for (int w = 0; w < waves.Length; w++)
             {
-                // 1) Путь к следующей волне
-                float startX = hero.position.x;
-                float targetX = startX + journeyDistance;
-                journeyBar.Bind(hero, startX, targetX);
+                if (_heroDead) yield break;
 
-                if (_heroAttack != null) _heroAttack.AttackEnabled = false; // герой не стреляет
+                // — ПУТЬ К ВОЛНЕ —
+                float startX = SafeHeroX();               // безопасно читаем X
+                float targetX = startX + journeyDistance;
+                if (hero != null) journeyBar.Bind(hero, startX, targetX);
+
+                if (_heroAttack != null) _heroAttack.AttackEnabled = false;
                 if (_heroMover  != null) _heroMover.Resume();
 
                 GameFlowController.Instance.SetPhase(GamePhase.Journey);
+
                 float t = 0f, timeout = 12f;
-                while (hero.position.x < targetX && t < timeout) { t += Time.deltaTime; yield return null; }
+                while (!_heroDead && hero != null && SafeHeroX() < targetX && t < timeout)
+                { t += Time.deltaTime; yield return null; }
+
                 if (_heroMover != null) _heroMover.Stop();
-                if (hero.position.x < targetX) { var p = hero.position; p.x = targetX; hero.position = p; }
 
-                // 2) Расставляем текущую волну: враги подъезжают в слоты и стоят (бой не начинается)
+                if (_heroDead || hero == null) yield break;
+
+                // на всякий — дотолкнуть в точку
+                if (SafeHeroX() < targetX)
+                    SnapHeroX(targetX);
+
+                // — РАССТАНОВКА ВОЛНЫ (все стоят) —
                 List<EnemyController> prepared = null;
-                yield return StartCoroutine(PrepareWaveStanding(waves[w], readyList => prepared = readyList));
+                yield return StartCoroutine(PrepareWaveStanding(waves[w], list => prepared = list));
+                if (_heroDead) yield break;
 
-                // 3) Для второй и последующих волн — СНАЧАЛА мини-игра предыдущей волны и карточки
+                // — СО 2-Й ВОЛНЫ: мини-игра с монетами предыдущей + карты —
                 if (w > 0)
                 {
                     yield return StartCoroutine(PlayMiniGameAndCards());
+                    if (_heroDead) yield break;
                 }
 
-                // 4) Запускаем пошаговый бой для ТЕКУЩЕЙ волны
+                // — БОЙ ТЕКУЩЕЙ ВОЛНЫ —
                 if (_heroAttack != null) _heroAttack.AttackEnabled = true;
-                if (turnController != null) yield return StartCoroutine(turnController.RunBattle(prepared));
+                if (turnController != null)
+                    yield return StartCoroutine(turnController.RunBattle(prepared));
             }
-
-            // Примечание: по твоему циклу мини-игра запускается "на подходе к следующей волне".
-            // После последней волны дополнительной мини-игры нет. Если нужно — скажи, добавим финальную выдачу монет.
         }
 
         IEnumerator PrepareWaveStanding(WaveConfig wave, System.Action<List<EnemyController>> onReady)
         {
             var spawned = new List<EnemyController>();
 
+            // стартовая позиция слотов от героя, но без жёсткой завязки на hero.position в каждом кадре
+            float heroX = SafeHeroX();
             var cam = Camera.main;
             float halfW = cam.orthographicSize * cam.aspect;
             float slotMarginFromHero = 1.6f;
             float slotRightPadding   = 0.8f;
-            float startSlotX = hero.position.x + Mathf.Min(Mathf.Max(slotMarginFromHero, halfW - slotRightPadding), 2.2f);
+            float startSlotX = heroX + Mathf.Min(Mathf.Max(slotMarginFromHero, halfW - slotRightPadding), 2.2f);
 
             lane.ResetLane(startSlotX);
 
@@ -103,19 +148,20 @@ namespace ArcadeHero2D.Gameplay.Waves
             {
                 for (int i = 0; i < entry.count; i++)
                 {
-                    var prefab = entry.enemyPrefab != null ? entry.enemyPrefab.GetComponent<EnemyController>() : null;
+                    if (_heroDead) { CleanupSpawned(spawned); yield break; }
+
+                    var prefab = entry.enemyPrefab ? entry.enemyPrefab.GetComponent<EnemyController>() : null;
                     if (prefab == null) continue;
 
-                    float slotX = lane.ReserveSlotX();
+                    float slotX  = lane.ReserveSlotX();
                     float spawnX = lane.GetSpawnXForSlot(slotX);
-                    float spawnY = hero.position.y;
-                    var pos = new Vector3(spawnX, spawnY, 0f);
+                    float spawnY = hero ? hero.position.y : 0f;
 
-                    var e = factory.Spawn(prefab, pos);
+                    var e = factory.Spawn(prefab, new Vector3(spawnX, spawnY, 0f));
                     if (e == null) continue;
 
                     e.AssignSlot(slotX);
-                    e.Init(hero);
+                    if (hero != null) e.Init(hero);
 
                     var melee = e.GetComponent<EnemyMeleeResponder>();
                     if (melee != null) melee.lane = lane;
@@ -127,10 +173,12 @@ namespace ArcadeHero2D.Gameplay.Waves
                 }
             }
 
-            // ждём, пока все встанут в свои слоты (InSlot)
+            // ждём, пока все встанут в слоты
             bool allReady = false;
             while (!allReady)
             {
+                if (_heroDead) { CleanupSpawned(spawned); yield break; }
+
                 allReady = true;
                 for (int i = 0; i < spawned.Count; i++)
                 {
@@ -141,7 +189,6 @@ namespace ArcadeHero2D.Gameplay.Waves
                 yield return null;
             }
 
-            // Герой всё ещё с выключенной атакой; враги просто стоят, ждут начала боя
             onReady?.Invoke(spawned);
         }
 
@@ -151,13 +198,39 @@ namespace ArcadeHero2D.Gameplay.Waves
             bool finished = false;
             miniGame.OnFinished = () => finished = true;
             miniGame.StartMiniGame();
-            while (!finished) yield return null;
+            while (!finished && !_heroDead) yield return null;
+            if (_heroDead) yield break;
 
             GameFlowController.Instance.SetPhase(GamePhase.Upgrade);
             bool chosen = false;
             resultPanel.OnUpgradeChosen = () => chosen = true;
             resultPanel.Show();
-            while (!chosen) yield return null;
+            while (!chosen && !_heroDead) yield return null;
+        }
+
+        // ===== Helpers =====
+        float SafeHeroX()
+        {
+            if (_heroDead || hero == null) return 0f;
+            try { return hero.position.x; }
+            catch { return 0f; }
+        }
+
+        void SnapHeroX(float x)
+        {
+            if (_heroDead || hero == null) return;
+            try
+            {
+                var p = hero.position;
+                p.x = x;
+                hero.position = p;
+            }
+            catch { /* игнор */ }
+        }
+
+        void CleanupSpawned(List<EnemyController> list)
+        {
+            // ничего не делаем специально — враги сами умрут по логике сцены, это просто страховка
         }
     }
 }

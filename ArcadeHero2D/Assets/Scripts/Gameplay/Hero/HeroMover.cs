@@ -1,4 +1,4 @@
-﻿using ArcadeHero2D.Domain.Contracts;
+﻿using ArcadeHero2D.Rendering;
 using UnityEngine;
 
 namespace ArcadeHero2D.Gameplay.Hero
@@ -7,8 +7,21 @@ namespace ArcadeHero2D.Gameplay.Hero
     {
         [SerializeField] float moveSpeed = 1.5f;
         bool _moving;
-        public void Resume() => _moving = true;
-        public void Stop()   => _moving = false;
+        UnitAnimationController _anim;
+
+        void Awake() => _anim = GetComponentInChildren<UnitAnimationController>();
+
+        public void Resume()
+        {
+            _moving = true;
+            if (_anim) _anim.SetMoving(true);
+        }
+
+        public void Stop()
+        {
+            _moving = false;
+            if (_anim) _anim.SetMoving(false);
+        }
 
         void Update()
         {

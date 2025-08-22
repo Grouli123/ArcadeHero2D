@@ -53,7 +53,7 @@ namespace ArcadeHero2D.Gameplay.Battle
                     if (e == null) continue;
                     var responders = e.GetComponents<IEnemyResponder>();
                     for (int r = 0; r < responders.Length; r++)
-                        responders[r].OnHeroHit();
+                        responders[r].OnHeroAttacked();
                 }
 
                 // чистим мёртвых
